@@ -1,1 +1,157 @@
-const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];const K={profile:"mf_profile",done:"mf_done",bookings:"mf_bookings"};function load(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}}function save(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch{return false}}let profile=load(K.profile,{name:"",goal:"condicionamento",level:"iniciante"}),done=load(K.done,[]),bookings=load(K.bookings,[]);const goalNames={condicionamento:"condicionamento geral",forca:"força",mobilidade:"mobilidade e flexibilidade",bemestar:"saúde e bem-estar"};const plans={iniciante:{main:[["Caminhada leve","5–10 minutos em ritmo confortável"],["Agachamento sem carga","Movimento confortável, se adequado"],["Flexão na parede","Movimento controlado"]],secondary:[["Mobilidade dos ombros","Movimentos suaves"],["Alongamento leve","Sem forçar amplitude"]]},intermediario:{main:[["Caminhada rápida ou bicicleta","Aquecimento leve"],["Agachamento orientado","Exemplo: 3 séries de 8–12"],["Remada orientada","Exemplo: 3 séries de 8–12"]],secondary:[["Prancha adaptada","Séries curtas com boa técnica"],["Mobilidade de quadril","Movimentos controlados"]]},avancado:{main:[["Aquecimento cardiovascular","Ritmo confortável"],["Agachamento com carga orientada","Carga definida por profissional"],["Remada ou puxada orientada","Siga seu plano individual"]],secondary:[["Estabilidade do tronco","Variante adequada ao aluno"],["Mobilidade e volta à calma","Movimentos suaves"]]}};function go(id){$$(".page").forEach(p=>p.classList.toggle("active",p.id===id));window.scrollTo(0,0);if(id==="treino")renderPlans();if(id==="agendar")renderBookings();if(id==="inicio")dashboard()}$$("[data-page]").forEach(b=>b.onclick=()=>go(b.dataset.page));$$("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));function dashboard(){let all=[...plans[profile.level].main,...plans[profile.level].secondary];$("#doneCount").textContent=all.filter((x,i)=>done.includes(profile.level+":"+i)).length;$("#bookingCount").textContent=bookings.length;$("#percent").textContent=Math.round($("#doneCount").textContent/all.length*100)+"%"}function renderPlans(){ $("#levelTitle").textContent="Nível: "+profile.level;$("#goalTitle").textContent="Objetivo: "+goalNames[profile.goal];let all=[...plans[profile.level].main,...plans[profile.level].secondary];function group(sel,arr,offset){let root=$(sel);root.replaceChildren();arr.forEach((x,i)=>{let id=profile.level+":"+(offset+i),card=document.createElement("article");card.className="exercise";let label=document.createElement("label"),cb=document.createElement("input");cb.type="checkbox";cb.checked=done.includes(id);cb.onchange=()=>{done=cb.checked?[...new Set([...done,id])]:done.filter(v=>v!==id);save(K.done,done);renderPlans()};label.append(cb);let text=document.createElement("div"),h=document.createElement("h3"),p=document.createElement("p");h.textContent=x[0];p.textContent=x[1];text.append(h,p);card.append(label,text);root.append(card)})}group("#mainList",plans[profile.level].main,0);group("#secondaryList",plans[profile.level].secondary,plans[profile.level].main.length);let count=all.filter((x,i)=>done.includes(profile.level+":"+i)).length;$("#progressLabel").textContent=count+" de "+all.length+" exercícios concluídos";$("#bar").style.width=count/all.length*100+"%";dashboard()}$("#profileForm").onsubmit=e=>{e.preventDefault();profile={name:$("#name").value.trim(),goal:$("#goal").value,level:$("#level").value};if(!profile.name)return;save(K.profile,profile);$("#profileMsg").textContent="Perfil salvo neste navegador.";$("#bookingName").value=profile.name;renderPlans();dashboard()};$("#name").value=profile.name;$("#goal").value=profile.goal;$("#level").value=profile.level;$("#bookingName").value=profile.name;let now=new Date(),local= new Date(now-now.getTimezoneOffset()*60000).toISOString().slice(0,10);$("#date").min=local;$("#date").value=local;$("#bookingForm").onsubmit=e=>{e.preventDefault();let b={id:Date.now(),name:$("#bookingName").value.trim(),modality:$("#modality").value,date:$("#date").value,time:$("#time").value};if(b.date<local){$("#bookingMsg").textContent="Escolha uma data futura ou hoje.";return}if(bookings.some(x=>x.date===b.date&&x.time===b.time)){$("#bookingMsg").textContent="Esse horário já foi registrado neste navegador. Escolha outro.";return}bookings.push(b);save(K.bookings,bookings);$("#bookingMsg").textContent="Agendamento registrado localmente (demonstração).";renderBookings();dashboard()};function renderBookings(){let root=$("#bookings");root.replaceChildren();if(!bookings.length){root.textContent="Nenhum agendamento salvo.";return}bookings.forEach(b=>{let d=document.createElement("article");d.className="panel pad";let p=document.createElement("p");p.textContent=`${b.name} · ${b.modality} · ${b.date} às ${b.time}`;let btn=document.createElement("button");btn.textContent="Cancelar registro";btn.onclick=()=>{bookings=bookings.filter(x=>x.id!==b.id);save(K.bookings,bookings);renderBookings();dashboard()};d.append(p,btn);root.append(d)})}$("#reset").onclick=()=>{done=[];save(K.done,done);renderPlans()};function answer(q){let s=q.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");if(s.includes("agend")||s.includes("horario")||s.includes("aula"))return"Abra Agendar aula, preencha nome, modalidade, data e horário. O registro é local e não confirma vaga real.";if(s.includes("aquec"))return"Há três exemplos na tela Aquecimento: aquecimento geral, dinâmico e mobilidade. Adapte-os com orientação profissional.";if(s.includes("serie")||s.includes("exercicio")||s.includes("treino"))return`Seu nível atual é ${profile.level}. Abra Meus treinos para consultar treino principal e secundário. As séries são exemplos, não prescrição individual.`;if(s.includes("nivel")||s.includes("condicionamento"))return`Seu nível salvo é ${profile.level}. Altere em Perfil e nível entre iniciante, intermediário e avançado.`;if(s.includes("objetivo"))return"Em Perfil e nível você pode escolher condicionamento, força, mobilidade ou bem-estar.";if(s.includes("dor")||s.includes("lesao"))return"Se sentir dor ou desconforto, interrompa o exercício e procure orientação profissional.";return"Posso ajudar com agendamento, séries de exercícios, aquecimento, treino principal/secundário e nível de condicionamento."}function send(q,role){let p=document.createElement("p");p.className="bubble "+role;p.textContent=q;$("#messages").append(p);$("#messages").scrollTop=$("#messages").scrollHeight}function ask(q){send(q,"user");send(answer(q),"bot")}$("#chatForm").onsubmit=e=>{e.preventDefault();ask($("#question").value);$("#question").value=""};$$("[data-q]").forEach(b=>b.onclick=()=>ask(b.dataset.q));renderPlans();renderBookings();dashboard();
+const $ = (id) => document.getElementById(id);
+const profileKey = "movefit_profile_v2";
+const bookingsKey = "movefit_bookings_v2";
+let profile = JSON.parse(localStorage.getItem(profileKey) || "null");
+let bookings = JSON.parse(localStorage.getItem(bookingsKey) || "[]");
+
+const workouts = {
+  iniciante: [
+    ["Caminhada leve", "5 minutos em ritmo confortável para começar."],
+    ["Sentar e levantar da cadeira", "2 séries de 8 repetições, com movimento controlado."],
+    ["Flexão na parede", "2 séries de 8 repetições, sem prender a respiração."],
+    ["Mobilidade de ombros", "Movimentos suaves por 1–2 minutos."]
+  ],
+  intermediario: [
+    ["Caminhada rápida ou bicicleta", "5–8 minutos em intensidade moderada."],
+    ["Agachamento com peso corporal", "3 séries de 10 repetições com técnica controlada."],
+    ["Flexão inclinada", "3 séries de 8–10 repetições conforme tolerância."],
+    ["Prancha adaptada", "3 repetições curtas, mantendo respiração normal."]
+  ],
+  avancado: [
+    ["Aquecimento progressivo", "5–10 minutos, elevando a intensidade gradualmente."],
+    ["Agachamento com carga adequada", "3 séries de 8 repetições; técnica antes da carga."],
+    ["Remada com elástico ou equipamento", "3 séries de 10 repetições com controle."],
+    ["Prancha", "3 séries curtas, mantendo alinhamento confortável."]
+  ]
+};
+const levelNames = { iniciante: "Iniciante", intermediario: "Intermediário", avancado: "Avançado" };
+const goalNames = { condicionamento: "Melhorar o condicionamento", forca: "Desenvolver força", mobilidade: "Mobilidade e bem-estar" };
+
+function showView(name) {
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === `view-${name}`));
+  document.querySelectorAll(".nav-btn").forEach(b => b.classList.toggle("active", b.dataset.view === name));
+  if (name === "treinos") renderWorkout();
+  if (name === "agenda") renderBookings();
+  if (name === "perfil" && profile) fillProfile();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+document.querySelectorAll("[data-view]").forEach(b => b.addEventListener("click", () => showView(b.dataset.view)));
+document.querySelectorAll("[data-goto]").forEach(b => b.addEventListener("click", () => showView(b.dataset.goto)));
+
+function fillProfile() {
+  $("user-name").value = profile.name || "";
+  $("user-level").value = profile.level || "iniciante";
+  $("user-goal").value = profile.goal || "condicionamento";
+  $("user-time").value = profile.time || "30";
+  $("booking-name").value = profile.name || "";
+}
+function renderWorkout() {
+  const level = profile?.level || "iniciante";
+  $("training-summary").textContent = profile
+    ? `${profile.name}, suas sugestões estão configuradas para o nível ${levelNames[level].toLowerCase()}, com foco em ${goalNames[profile.goal].toLowerCase()} e ${profile.time} minutos disponíveis.`
+    : "Você ainda não salvou um perfil. As sugestões iniciais são exemplos para iniciantes.";
+  $("workout-title").textContent = `Série sugerida · ${levelNames[level]}`;
+  $("workout-list").innerHTML = workouts[level].map((item, i) =>
+    `<div class="exercise"><span class="exercise-number">${String(i + 1).padStart(2, "0")}</span><div><strong>${item[0]}</strong><p>${item[1]}</p></div></div>`
+  ).join("");
+}
+$("profile-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  profile = {
+    name: $("user-name").value.trim(),
+    level: $("user-level").value,
+    goal: $("user-goal").value,
+    time: $("user-time").value
+  };
+  localStorage.setItem(profileKey, JSON.stringify(profile));
+  $("profile-message").textContent = "Perfil salvo neste navegador!";
+  $("booking-name").value = profile.name;
+  renderWorkout();
+});
+
+function renderBookings() {
+  const list = $("booking-list");
+  if (!bookings.length) {
+    list.innerHTML = '<p class="small-muted">Nenhuma solicitação registrada neste navegador.</p>';
+    return;
+  }
+  list.innerHTML = bookings.map((b, i) => `<div class="booking-item"><div><strong>${escapeHtml(b.type)} · ${escapeHtml(b.name)}</strong><small>${escapeHtml(b.date)} às ${escapeHtml(b.time)}</small></div><span class="pill">Demonstrativo #${i + 1}</span></div>`).join("");
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+}
+const today = new Date();
+$("booking-date").min = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+$("booking-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const booking = {
+    name: $("booking-name").value.trim(),
+    type: $("booking-type").value,
+    date: $("booking-date").value,
+    time: $("booking-time").value
+  };
+  if (booking.date < $("booking-date").min) {
+    $("booking-message").textContent = "Escolha uma data de hoje em diante.";
+    return;
+  }
+  bookings.push(booking);
+  localStorage.setItem(bookingsKey, JSON.stringify(bookings));
+  $("booking-message").textContent = "Solicitação registrada localmente. Isso não confirma uma vaga real.";
+  renderBookings();
+});
+$("clear-bookings").addEventListener("click", () => {
+  if (confirm("Deseja apagar as solicitações salvas neste navegador?")) {
+    bookings = [];
+    localStorage.setItem(bookingsKey, JSON.stringify(bookings));
+    renderBookings();
+  }
+});
+
+const messageArea = $("chat-messages");
+function addMessage(text, type) {
+  const div = document.createElement("div");
+  div.className = `message ${type}`;
+  div.textContent = text;
+  messageArea.appendChild(div);
+  messageArea.scrollTop = messageArea.scrollHeight;
+}
+function answerQuestion(raw) {
+  const q = raw.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  if (q.includes("iniciante") || q.includes("comeco") || q.includes("comecar") || q.includes("nivel")) {
+    return "Se você está começando, vá com calma: priorize movimentos simples, intensidade confortável e pausas. Posso mostrar uma série de exemplo na seção “Meus treinos”. Se tiver lesões ou condições de saúde, converse com um profissional antes de iniciar.";
+  }
+  if (q.includes("aquec") || q.includes("along") || q.includes("mobilidade")) {
+    return "Você pode considerar: 1) caminhada ou bicicleta leve por 5–10 minutos; 2) mobilidade dinâmica suave; 3) séries preparatórias leves do exercício principal. Evite forçar amplitudes e adapte ao seu corpo.";
+  }
+  if (q.includes("agend") || q.includes("aula") || q.includes("horario") || q.includes("marcar")) {
+    return "Para registrar uma solicitação, abra “Agendar aula”, preencha nome, modalidade, data e horário e clique em “Registrar solicitação”. Atenção: o protótipo não consulta a agenda real nem reserva uma vaga.";
+  }
+  if (q.includes("serie") || q.includes("exercicio") || q.includes("treino")) {
+    return "Abra “Meus treinos” para ver uma série demonstrativa. Você pode salvar seu nível em “Perfil e nível” para adaptar as sugestões. As séries são exemplos educativos, não uma prescrição individual.";
+  }
+  if (q.includes("objetivo") || q.includes("forca") || q.includes("condicionamento")) {
+    return "No “Perfil e nível”, você pode selecionar seu objetivo principal: condicionamento, força ou mobilidade e bem-estar. O protótipo usa essa informação para contextualizar o perfil, mas ainda não faz periodização profissional.";
+  }
+  if (q.includes("oi") || q.includes("ola") || q.includes("bom dia") || q.includes("boa tarde") || q.includes("boa noite")) {
+    return `Olá${profile?.name ? ", " + profile.name : ""}! 😊 Como posso ajudar com seu treino hoje?`;
+  }
+  return "Posso ajudar com nível de condicionamento, séries demonstrativas, aquecimento ou agendamento. Experimente uma das sugestões abaixo. Para dúvidas sobre saúde ou execução de exercícios, procure um profissional qualificado.";
+}
+$("chat-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const input = $("chat-input");
+  const text = input.value.trim();
+  if (!text) return;
+  addMessage(text, "user");
+  input.value = "";
+  addMessage(answerQuestion(text), "assistant");
+});
+document.querySelectorAll("[data-question]").forEach(b => b.addEventListener("click", () => {
+  showView("chat");
+  addMessage(b.dataset.question, "user");
+  addMessage(answerQuestion(b.dataset.question), "assistant");
+}));
+
+if (profile) fillProfile();
+renderWorkout();
+renderBookings();

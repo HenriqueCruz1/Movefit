@@ -1,14 +1,17 @@
-MOVEFIT ASSISTENTE — GUIA RÁPIDO
+# MoveFIT — Assistente Virtual
 
-Como executar: extraia o ZIP, mantenha index.html, style.css e script.js juntos e abra index.html no navegador.
+## Começar
+Abra `index.html` no navegador. Não precisa instalar programas ou dependências.
 
-Requisitos contemplados no protótipo:
-1. Agendamento de aula com modalidade, data e horário; registros locais e checagem simples de conflito no mesmo navegador.
-2. Exemplos de séries que mudam conforme objetivo e nível selecionados.
-3. Modalidades de aquecimento geral, dinâmico e mobilidade.
-4. Treino principal e secundário em seções separadas.
-5. Nível iniciante, intermediário e avançado.
+## Conteúdo
+- `index.html`: estrutura do site.
+- `style.css`: visual e responsividade.
+- `script.js`: interações e chatbot por regras.
+- `assets/maya.png`: persona digital criada por IA.
+- `DOCUMENTO_DO_PROJETO.md`: documentação técnica.
+- `FLUXOS_DE_CONVERSA.md`: exemplos dos fluxos conversacionais.
+- `PRECIFICACAO.md`: estimativa de custos.
+- `CHECKLIST_ENTREGA.md`: lista de entregáveis e roteiro de demonstração.
 
-Tecnologias: HTML, CSS, JavaScript e localStorage.
-
-Limitações: o chat usa respostas programadas, não IA generativa. Agendamentos não consultam a agenda real da academia. Dados são locais a este navegador. Séries e exercícios são ilustrativos e devem ser validados por profissional de educação física. Para produção, será necessário backend, banco de dados, autenticação, privacidade e agenda centralizada.
+## Observação
+Este é um protótipo acadêmico local. O chatbot usa respostas predefinidas. O agendamento não está conectado à agenda da academia e não confirma vagas reais.

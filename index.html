@@ -1,8 +1,122 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MoveFIT | Assistente Virtual</title><link rel="stylesheet" href="style.css"></head><body>
-<header><a class="brand" href="#">🟢 Move<span>FIT</span><small>ASSISTENTE VIRTUAL</small></a><nav><button data-page="inicio">Início</button><button data-page="perfil">Perfil e nível</button><button data-page="agendar">Agendar aula</button><button data-page="treino">Meus treinos</button><button data-page="aquecimento">Aquecimento</button><button data-page="chat">Assistente</button></nav></header><main>
-<section id="inicio" class="page active"><div class="hero"><div><p class="eyebrow">MOVIMENTO · SAÚDE · BEM-ESTAR</p><h1>Seu próximo passo começa <span>agora.</span></h1><p>A Lia ajuda você a organizar horários, consultar exemplos de treino e conhecer modalidades de aquecimento.</p><button class="primary" data-go="treino">Consultar treinos</button> <button data-go="chat">Falar com a Lia</button></div><aside class="panel center"><div class="avatar">L</div><h2>Lia MoveFIT</h2><p>Olá! Vamos organizar seu próximo treino?</p><b class="green">● Pronta para ajudar</b></aside></div><h2>Seu painel</h2><div class="stats"><article class="panel"><p>Exercícios concluídos</p><strong id="doneCount">0</strong></article><article class="panel"><p>Aulas registradas</p><strong id="bookingCount">0</strong></article><article class="panel"><p>Progresso</p><strong id="percent">0%</strong></article></div><p class="notice">Protótipo acadêmico. As séries são exemplos e devem ser avaliadas por profissional de educação física.</p></section>
-<section id="perfil" class="page"><p class="eyebrow">PERSONALIZAÇÃO</p><h1>Perfil e condicionamento</h1><form id="profileForm" class="panel form"><label>Nome<input id="name" maxlength="60" required placeholder="Seu nome"></label><label>Objetivo<select id="goal"><option value="condicionamento">Condicionamento geral</option><option value="forca">Desenvolvimento de força</option><option value="mobilidade">Mobilidade e flexibilidade</option><option value="bemestar">Saúde e bem-estar</option></select></label><label>Nível de condicionamento<select id="level"><option value="iniciante">Iniciante</option><option value="intermediario">Intermediário</option><option value="avancado">Avançado</option></select></label><button class="primary">Salvar perfil</button><p id="profileMsg" class="green"></p></form></section>
-<section id="agendar" class="page"><p class="eyebrow">ORGANIZE SUA ROTINA</p><h1>Agendar horário de aula</h1><form id="bookingForm" class="panel form"><label>Nome<input id="bookingName" required maxlength="60"></label><label>Modalidade<select id="modality"><option>Musculação orientada</option><option>Treinamento funcional</option><option>Alongamento e mobilidade</option><option>Condicionamento físico</option></select></label><label>Data<input type="date" id="date" required></label><label>Horário<select id="time"><option>07:00</option><option>08:00</option><option>09:00</option><option>12:00</option><option>17:00</option><option>18:00</option><option>19:00</option></select></label><button class="primary">Registrar agendamento</button><p id="bookingMsg" class="green"></p><p class="notice">Registro demonstrativo neste navegador; não confirma uma vaga real na academia.</p></form><h2>Agendamentos salvos</h2><div id="bookings"></div></section>
-<section id="treino" class="page"><p class="eyebrow">ROTINA DE EXERCÍCIOS</p><h1>Treino principal e secundário</h1><p>As sugestões mudam de acordo com o nível salvo no perfil. São exemplos, não uma prescrição individual.</p><div class="panel pad"><h2 id="levelTitle">Nível: iniciante</h2><p id="goalTitle"></p></div><div class="columns"><div><h2>Treino principal</h2><div id="mainList"></div></div><div><h2>Treino secundário</h2><div id="secondaryList"></div></div></div><div class="panel pad"><b id="progressLabel">0 exercícios concluídos</b><div class="track"><div id="bar"></div></div><button id="reset">Limpar marcações</button></div></section>
-<section id="aquecimento" class="page"><p class="eyebrow">PREPARAÇÃO</p><h1>Modalidades de aquecimento</h1><div class="columns"><article class="panel pad"><h2>Aquecimento geral</h2><p>Movimentos leves para aumentar gradualmente a atividade corporal.</p><ul><li>Caminhada leve</li><li>Bicicleta em ritmo confortável</li><li>Movimentação suave das articulações</li></ul></article><article class="panel pad"><h2>Aquecimento dinâmico</h2><p>Movimentos controlados relacionados à atividade principal.</p><ul><li>Marcha no lugar</li><li>Movimentos leves dos braços</li><li>Agachamentos sem carga, se adequados</li></ul></article><article class="panel pad"><h2>Mobilidade</h2><p>Preparação suave das articulações.</p><ul><li>Rotação confortável dos ombros</li><li>Mobilidade de tornozelos</li><li>Movimentos controlados do quadril</li></ul></article></div><p class="notice">Não force movimentos e procure orientação profissional se sentir dor ou desconforto.</p></section>
-<section id="chat" class="page"><p class="eyebrow">CONVERSE COM A LIA</p><h1>Assistente virtual</h1><div class="panel chat"><div id="messages" aria-live="polite"><p class="bubble bot">Olá! Sou a Lia MoveFIT. Pergunte sobre agendamento, séries, aquecimento, treino principal/secundário ou nível de condicionamento.</p></div><div class="quick"><button data-q="Como agendar uma aula?">Agendar aula</button><button data-q="Quais são os aquecimentos?">Aquecimento</button><button data-q="Quero uma série de exercícios">Séries de exercícios</button><button data-q="Qual meu nível?">Meu nível</button></div><form id="chatForm"><input id="question" maxlength="300" required placeholder="Digite sua pergunta"><button class="primary">Enviar</button></form><p class="notice">As respostas são pré-programadas; esta versão não usa uma IA externa.</p></div></section></main><footer>MoveFIT · Projeto acadêmico de Engenharia de Software I</footer><script src="script.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Protótipo acadêmico do assistente virtual da academia MoveFIT.">
+  <title>MoveFIT | Assistente Virtual</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">M<span>F</span></div>
+    <div><strong>MoveFIT</strong><small>Assistente virtual</small></div>
+    <span class="open-label"><i></i> Protótipo demonstrativo</span>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <div class="persona">
+        <img src="assets/maya.png" alt="Avatar digital da Maya, assistente virtual da MoveFIT">
+        <div><strong>Maya</strong><small>Sua parceira de treino</small></div>
+      </div>
+      <p class="nav-caption">MENU PRINCIPAL</p>
+      <button class="nav-btn active" data-view="inicio">⌂ <span>Início</span></button>
+      <button class="nav-btn" data-view="perfil">◉ <span>Perfil e nível</span></button>
+      <button class="nav-btn" data-view="treinos">▤ <span>Meus treinos</span></button>
+      <button class="nav-btn" data-view="aquecimento">♨ <span>Aquecimento</span></button>
+      <button class="nav-btn" data-view="agenda">▦ <span>Agendar aula</span></button>
+      <button class="nav-btn" data-view="chat">☏ <span>Conversar com Maya</span></button>
+      <div class="sidebar-note"><strong>Movimente-se com cuidado.</strong><p>As sugestões são educativas e não substituem a orientação de um profissional de Educação Física ou médico.</p></div>
+    </aside>
+
+    <section class="content">
+      <section class="view active" id="view-inicio">
+        <div class="welcome-card">
+          <div class="welcome-copy">
+            <span class="eyebrow">BEM-VINDO(A) À MOVEFIT</span>
+            <h1>Seu próximo passo<br>começa <em>agora.</em></h1>
+            <p>Organize seu treino, conheça opções de aquecimento e tire dúvidas com a Maya.</p>
+            <button class="primary-btn" data-goto="perfil">Personalizar meu treino →</button>
+          </div>
+          <img class="welcome-avatar" src="assets/maya.png" alt="">
+        </div>
+        <h2>O que você quer fazer hoje?</h2>
+        <div class="feature-grid">
+          <button class="feature-card" data-goto="treinos"><span>▤</span><strong>Ver série de exercícios</strong><small>Sugestões por nível e objetivo</small></button>
+          <button class="feature-card" data-goto="aquecimento"><span>♨</span><strong>Preparar o corpo</strong><small>Conheça opções de aquecimento</small></button>
+          <button class="feature-card" data-goto="agenda"><span>▦</span><strong>Agendar uma aula</strong><small>Escolha modalidade e horário</small></button>
+          <button class="feature-card" data-goto="chat"><span>☏</span><strong>Falar com a Maya</strong><small>Converse com a assistente</small></button>
+        </div>
+        <div class="notice"><strong>Importante</strong><span>Este é um protótipo acadêmico. Os agendamentos são salvos somente neste navegador e não reservam uma vaga real.</span></div>
+      </section>
+
+      <section class="view" id="view-perfil">
+        <div class="section-heading"><span class="eyebrow">PERSONALIZAÇÃO</span><h1>Seu perfil</h1><p>Conte um pouco sobre você para ver sugestões adequadas ao seu nível.</p></div>
+        <form id="profile-form" class="panel form-grid">
+          <label>Como podemos chamar você?<input id="user-name" maxlength="40" placeholder="Seu nome" required></label>
+          <label>Nível de condicionamento<select id="user-level"><option value="iniciante">Iniciante</option><option value="intermediario">Intermediário</option><option value="avancado">Avançado</option></select></label>
+          <label>Objetivo principal<select id="user-goal"><option value="condicionamento">Melhorar o condicionamento</option><option value="forca">Desenvolver força</option><option value="mobilidade">Mobilidade e bem-estar</option></select></label>
+          <label>Tempo disponível<select id="user-time"><option value="15">15 minutos</option><option value="30" selected>30 minutos</option><option value="45">45 minutos</option></select></label>
+          <button class="primary-btn" type="submit">Salvar meu perfil</button>
+          <p class="form-message" id="profile-message" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="view" id="view-treinos">
+        <div class="section-heading"><span class="eyebrow">SUGESTÕES EDUCATIVAS</span><h1>Meus treinos</h1><p>As opções abaixo são exemplos para o protótipo. Ajuste intensidade e execução com um profissional.</p></div>
+        <div class="profile-summary" id="training-summary">Selecione seu nível em “Perfil e nível” para personalizar as sugestões.</div>
+        <div class="panel">
+          <div class="panel-title"><h2 id="workout-title">Série sugerida</h2><span class="pill">Exemplo</span></div>
+          <div id="workout-list" class="exercise-list"></div>
+        </div>
+        <div class="notice warning"><strong>Segurança</strong><span>Interrompa se sentir dor, tontura ou falta de ar incomum. Se tiver lesões, condições médicas ou dúvidas, procure orientação profissional antes de treinar.</span></div>
+      </section>
+
+      <section class="view" id="view-aquecimento">
+        <div class="section-heading"><span class="eyebrow">ANTES DE TREINAR</span><h1>Aquecimento</h1><p>Escolha uma opção leve e aumente a intensidade gradualmente, conforme sua condição.</p></div>
+        <div class="feature-grid warm-grid">
+          <article class="panel"><div class="exercise-icon">🚶</div><h2>Cardiorrespiratório leve</h2><p>Caminhada confortável ou bicicleta em ritmo leve.</p><div class="meta">5–10 min · intensidade leve</div></article>
+          <article class="panel"><div class="exercise-icon">↔</div><h2>Mobilidade dinâmica</h2><p>Movimentos controlados de ombros, quadris e tornozelos, sem forçar a amplitude.</p><div class="meta">3–5 min · movimentos suaves</div></article>
+          <article class="panel"><div class="exercise-icon">🏋</div><h2>Séries preparatórias</h2><p>Faça uma série bem leve do movimento principal antes de aumentar a carga.</p><div class="meta">1–2 séries leves · sem esforço excessivo</div></article>
+        </div>
+      </section>
+
+      <section class="view" id="view-agenda">
+        <div class="section-heading"><span class="eyebrow">ORGANIZE SUA ROTINA</span><h1>Agendar aula</h1><p>Registre uma solicitação demonstrativa de aula.</p></div>
+        <form id="booking-form" class="panel form-grid">
+          <label>Nome<input id="booking-name" maxlength="40" placeholder="Seu nome" required></label>
+          <label>Modalidade<select id="booking-type"><option>Musculação</option><option>Funcional</option><option>Alongamento e mobilidade</option><option>Avaliação inicial</option></select></label>
+          <label>Data<input id="booking-date" type="date" required></label>
+          <label>Horário<select id="booking-time"><option>08:00</option><option>09:00</option><option>10:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>18:00</option><option>19:00</option></select></label>
+          <button class="primary-btn" type="submit">Registrar solicitação</button>
+          <p class="form-message" id="booking-message" aria-live="polite"></p>
+        </form>
+        <div class="panel"><div class="panel-title"><h2>Solicitações neste navegador</h2><button class="text-btn" id="clear-bookings">Limpar lista</button></div><div id="booking-list" class="booking-list"></div></div>
+        <p class="small-muted">Atenção: não há integração com a agenda real da academia. Nenhuma vaga é reservada.</p>
+      </section>
+
+      <section class="view" id="view-chat">
+        <div class="section-heading"><span class="eyebrow">ATENDIMENTO VIRTUAL</span><h1>Converse com a Maya</h1><p>Faça uma pergunta ou selecione uma sugestão abaixo.</p></div>
+        <div class="chat-panel">
+          <div class="chat-header"><img src="assets/maya.png" alt=""><div><strong>Maya</strong><small>Assistente virtual MoveFIT</small></div><span class="online-dot"></span></div>
+          <div id="chat-messages" class="chat-messages" aria-live="polite">
+            <div class="message assistant">Olá! Eu sou a Maya, sua assistente virtual da MoveFIT. Posso ajudar com treinos, aquecimento, níveis de condicionamento e agendamento demonstrativo. O que você gostaria de saber?</div>
+          </div>
+          <div class="suggestions">
+            <button data-question="Sou iniciante. Como começo?">Sou iniciante</button>
+            <button data-question="Quais opções de aquecimento existem?">Aquecimento</button>
+            <button data-question="Como agendo uma aula?">Agendar aula</button>
+            <button data-question="Quero ver uma série de exercícios">Série de exercícios</button>
+          </div>
+          <form id="chat-form" class="chat-input"><input id="chat-input" placeholder="Digite sua pergunta..." maxlength="500" aria-label="Sua pergunta" required><button type="submit" aria-label="Enviar mensagem">Enviar</button></form>
+        </div>
+        <p class="small-muted">O chatbot utiliza respostas predefinidas em JavaScript; não é uma IA conectada a um serviço externo.</p>
+      </section>
+
+      <footer>MoveFIT • Protótipo acadêmico de Engenharia de Software I</footer>
+    </section>
+  </main>
+  <script src="script.js"></script>
+</body>
+</html>
