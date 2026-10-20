@@ -1,190 +1,124 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MoveFIT Assistente</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f1f4f3;
-      margin: 0;
-      padding: 30px 15px;
-      color: #202820;
-    }
-
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: white;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 4px 18px #0001;
-    }
-
-    header {
-      background: #176b45;
-      color: white;
-      padding: 22px;
-    }
-
-    header h1 {
-      margin: 0 0 8px;
-    }
-
-    #mensagens {
-      padding: 20px;
-      min-height: 300px;
-      max-height: 400px;
-      overflow-y: auto;
-    }
-
-    .mensagem {
-      padding: 12px;
-      border-radius: 10px;
-      margin: 10px 0;
-      white-space: pre-wrap;
-    }
-
-    .bot {
-      background: #e8f4ec;
-    }
-
-    .usuario {
-      background: #dce8ff;
-      text-align: right;
-    }
-
-    form {
-      display: flex;
-      gap: 8px;
-      padding: 15px;
-      border-top: 1px solid #ddd;
-    }
-
-    input {
-      flex: 1;
-      min-width: 0;
-      padding: 12px;
-      border: 1px solid #bbb;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    button {
-      padding: 12px 16px;
-      background: #176b45;
-      color: white;
-      border: 0;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background: #105335;
-    }
-
-    .sugestoes {
-      padding: 0 15px 15px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-  </style>
+  <meta name="description" content="Protótipo de assistente virtual da academia MoveFIT">
+  <title>MoveFIT | Assistente Virtual</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <main class="container">
-    <header>
-      <h1>MoveFIT Assistente</h1>
-      <p>Sua parceira de treino, a qualquer hora!</p>
-    </header>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="MoveFIT página inicial">
+      <span class="brand-mark">M</span>
+      <span>Move<span class="brand-accent">FIT</span><small>ASSISTENTE VIRTUAL</small></span>
+    </a>
+    <nav aria-label="Navegação principal">
+      <button class="nav-btn active" data-page="inicio">Início</button>
+      <button class="nav-btn" data-page="perfil">Meu perfil</button>
+      <button class="nav-btn" data-page="treino">Meu treino</button>
+      <button class="nav-btn" data-page="assistente">Assistente</button>
+    </nav>
+  </header>
 
-    <section id="mensagens" aria-live="polite">
-      <div class="mensagem bot">
-        Olá! Sou a MoveFIT, sua assistente virtual.
-        Como posso ajudar no seu treino?
+  <main>
+    <section id="page-inicio" class="page active">
+      <div class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">SUA COMPANHEIRA DE TREINO</p>
+          <h1>Seu próximo passo começa <span>agora.</span></h1>
+          <p class="hero-text">Organize seus treinos, acompanhe seu progresso e tire dúvidas com a assistente virtual MoveFIT.</p>
+          <div class="hero-actions">
+            <button class="btn btn-primary" data-go="treino">Ver meu treino</button>
+            <button class="btn btn-secondary" data-go="assistente">Conversar com a Lia</button>
+          </div>
+          <p class="note">Protótipo acadêmico • Disponível para testar no navegador</p>
+        </div>
+        <div class="hero-card">
+          <div class="avatar" aria-hidden="true">L</div>
+          <p class="eyebrow">SUA ASSISTENTE</p>
+          <h2>Lia MoveFIT</h2>
+          <p>Olá! Vamos organizar seu treino de hoje?</p>
+          <div class="status"><span></span> Pronta para ajudar</div>
+        </div>
+      </div>
+
+      <div class="section-heading">
+        <div><p class="eyebrow">PAINEL DO ALUNO</p><h2>Seu resumo</h2></div>
+        <span id="welcomeName" class="muted">Olá, aluno(a)!</span>
+      </div>
+      <div class="stats-grid">
+        <article class="stat-card"><span class="stat-icon">▤</span><p>Exercícios no treino</p><strong id="totalExercises">5</strong></article>
+        <article class="stat-card"><span class="stat-icon">✓</span><p>Concluídos hoje</p><strong id="doneExercises">0</strong></article>
+        <article class="stat-card"><span class="stat-icon">↗</span><p>Progresso do treino</p><strong id="progressPercent">0%</strong></article>
+      </div>
+      <div class="callout">
+        <div><h3>Pequenos passos também são progresso.</h3><p>Respeite seus limites e peça orientação ao profissional de educação física da academia.</p></div>
+        <button class="btn btn-primary" data-go="perfil">Configurar perfil</button>
       </div>
     </section>
 
-    <div class="sugestoes">
-      <button type="button" onclick="perguntar('treino')">
-        Meu treino
-      </button>
-      <button type="button" onclick="perguntar('exercícios')">
-        Exercícios
-      </button>
-      <button type="button" onclick="perguntar('ajuda')">
-        Ajuda
-      </button>
-    </div>
+    <section id="page-perfil" class="page">
+      <div class="page-heading"><p class="eyebrow">PERSONALIZAÇÃO</p><h1>Meu perfil</h1><p>Preencha seus dados para personalizar a experiência.</p></div>
+      <form id="profileForm" class="panel form-panel">
+        <label for="studentName">Nome</label>
+        <input id="studentName" name="studentName" maxlength="60" placeholder="Como podemos chamar você?" required>
+        <label for="goal">Objetivo principal</label>
+        <select id="goal" name="goal">
+          <option value="condicionamento">Melhorar o condicionamento</option>
+          <option value="forca">Desenvolver força</option>
+          <option value="mobilidade">Melhorar mobilidade e flexibilidade</option>
+          <option value="saude">Manter saúde e bem-estar</option>
+        </select>
+        <label for="level">Experiência com exercícios</label>
+        <select id="level" name="level">
+          <option value="iniciante">Iniciante</option>
+          <option value="intermediario">Intermediário</option>
+          <option value="avancado">Avançado</option>
+        </select>
+        <button class="btn btn-primary" type="submit">Salvar perfil</button>
+        <p id="profileFeedback" class="feedback" role="status"></p>
+        <p class="note">Este protótipo salva o perfil somente neste navegador, usando armazenamento local.</p>
+      </form>
+    </section>
 
-    <form id="formulario">
-      <input id="entrada"
-        placeholder="Digite sua pergunta..."
-        aria-label="Sua pergunta"
-        required>
-      <button type="submit">Enviar</button>
-    </form>
+    <section id="page-treino" class="page">
+      <div class="page-heading"><p class="eyebrow">ROTINA DE EXERCÍCIOS</p><h1>Meu treino</h1><p>Marque cada exercício quando terminar. A lista é demonstrativa e deve ser adaptada por um profissional.</p></div>
+      <div class="workout-toolbar">
+        <div><strong>Treino demonstrativo</strong><p class="muted">Exemplo geral — não é uma prescrição individual</p></div>
+        <button id="resetWorkout" class="btn btn-secondary" type="button">Reiniciar marcações</button>
+      </div>
+      <div id="exerciseList" class="exercise-list"></div>
+      <div class="progress-panel panel">
+        <div class="progress-top"><strong>Progresso de hoje</strong><strong id="progressLabel">0 de 5</strong></div>
+        <div class="progress-track"><div id="progressBar" class="progress-fill"></div></div>
+        <p id="progressMessage" class="muted">Comece quando estiver pronto(a).</p>
+      </div>
+    </section>
+
+    <section id="page-assistente" class="page">
+      <div class="page-heading"><p class="eyebrow">CONVERSE COM A LIA</p><h1>Assistente virtual</h1><p>Faça perguntas sobre as funções do protótipo e consulte informações gerais.</p></div>
+      <div class="chat panel">
+        <div class="chat-header"><div class="avatar avatar-small">L</div><div><strong>Lia MoveFIT</strong><p><span class="online-dot"></span> Assistente demonstrativa</p></div></div>
+        <div id="chatMessages" class="chat-messages" aria-live="polite">
+          <div class="bubble bot-bubble">Oi! Eu sou a Lia, assistente virtual da MoveFIT. Posso mostrar como consultar seu treino, atualizar seu perfil ou acompanhar o progresso. Como posso ajudar?</div>
+        </div>
+        <div class="quick-questions">
+          <button class="quick-btn" data-question="Como vejo meu treino?">Ver meu treino</button>
+          <button class="quick-btn" data-question="Como salvo meu perfil?">Meu perfil</button>
+          <button class="quick-btn" data-question="Como acompanho meu progresso?">Meu progresso</button>
+        </div>
+        <form id="chatForm" class="chat-form">
+          <input id="chatInput" placeholder="Digite sua pergunta..." maxlength="300" autocomplete="off" required aria-label="Digite sua pergunta">
+          <button class="btn btn-primary" type="submit">Enviar</button>
+        </form>
+        <p class="note chat-note">As respostas são pré-programadas. Esta versão não usa uma IA conectada à internet.</p>
+      </div>
+    </section>
   </main>
 
-  <script>
-    const mensagens = document.getElementById("mensagens");
-    const entrada = document.getElementById("entrada");
-    const formulario = document.getElementById("formulario");
-
-    function adicionarMensagem(texto, classe) {
-      const div = document.createElement("div");
-      div.className = "mensagem " + classe;
-      div.textContent = texto;
-      mensagens.appendChild(div);
-      mensagens.scrollTop = mensagens.scrollHeight;
-    }
-
-    function responder(pergunta) {
-      const texto = pergunta.toLowerCase();
-
-      if (texto.includes("treino")) {
-        return "Exemplo de treino:\n" +
-          "1. Agachamento: 3 séries de 10 repetições.\n" +
-          "2. Supino: 3 séries de 10 repetições.\n" +
-          "3. Remada: 3 séries de 12 repetições.\n\n" +
-          "Consulte seu professor para adequar os exercícios.";
-      }
-
-      if (texto.includes("exerc")) {
-        return "Posso explicar exercícios de pernas, " +
-          "peito, costas, braços e abdômen. " +
-          "Qual grupo muscular você quer conhecer?";
-      }
-
-      if (texto.includes("ajuda") || texto.includes("olá") ||
-          texto.includes("oi")) {
-        return "Estou aqui para ajudar! Você pode perguntar " +
-          "sobre treinos, exercícios ou sua rotina na academia.";
-      }
-
-      return "Ainda não sei responder a essa pergunta. " +
-        "Experimente perguntar sobre seu treino ou exercícios.";
-    }
-
-    function perguntar(texto) {
-      adicionarMensagem(texto, "usuario");
-      adicionarMensagem(responder(texto), "bot");
-    }
-
-    formulario.addEventListener("submit", function(evento) {
-      evento.preventDefault();
-
-      const texto = entrada.value.trim();
-      if (!texto) return;
-
-      perguntar(texto);
-      entrada.value = "";
-      entrada.focus();
-    });
-  </script>
+  <footer><strong>MoveFIT</strong> · Protótipo acadêmico de Engenharia de Software I · <span id="year"></span></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
 </body>
 </html>
