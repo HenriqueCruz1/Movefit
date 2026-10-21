@@ -137,19 +137,54 @@ function answerQuestion(raw) {
   }
   return "Posso ajudar com nível de condicionamento, séries demonstrativas, aquecimento ou agendamento. Experimente uma das sugestões abaixo. Para dúvidas sobre saúde ou execução de exercícios, procure um profissional qualificado.";
 }
-$("chat-form").addEventListener("submit", (e) => {
+
+// Tenta usar a IA generativa pelo servidor. Se a API estiver indisponível,
+// o protótipo continua respondendo com as regras locais acima.
+async function askMayaAI(question) {
+  const response = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: question,
+      profile: profile ? { name: profile.name, level: profile.level, goal: profile.goal } : null
+    })
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || "Não foi possível consultar a IA.");
+  if (!data.reply) throw new Error("A IA não retornou uma resposta.");
+  return data.reply;
+}
+
+async function sendToMaya(raw) {
+  const question = raw.trim();
+  if (!question) return;
+  addMessage(question, "user");
+  const waiting = document.createElement("div");
+  waiting.className = "message assistant";
+  waiting.textContent = "Maya está pensando...";
+  messageArea.appendChild(waiting);
+  messageArea.scrollTop = messageArea.scrollHeight;
+  try {
+    waiting.textContent = await askMayaAI(question);
+  } catch (error) {
+    // A resposta local mantém o protótipo utilizável mesmo sem chave/internet.
+    waiting.textContent = answerQuestion(question) + "\n\n(Resposta local: a IA generativa não está conectada no momento.)";
+    console.warn("Falha na API da Maya:", error);
+  }
+  messageArea.scrollTop = messageArea.scrollHeight;
+}
+
+$("chat-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const input = $("chat-input");
   const text = input.value.trim();
   if (!text) return;
-  addMessage(text, "user");
   input.value = "";
-  addMessage(answerQuestion(text), "assistant");
+  await sendToMaya(text);
 });
-document.querySelectorAll("[data-question]").forEach(b => b.addEventListener("click", () => {
+document.querySelectorAll("[data-question]").forEach(b => b.addEventListener("click", async () => {
   showView("chat");
-  addMessage(b.dataset.question, "user");
-  addMessage(answerQuestion(b.dataset.question), "assistant");
+  await sendToMaya(b.dataset.question);
 }));
 
 if (profile) fillProfile();
