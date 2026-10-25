@@ -10,7 +10,7 @@ module.exports = async function handler(req, res) {
   }
 
   const apiKey = process.env.GEMINI_API_KEY;
-  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+  const model = process.env.GEMINI_MODEL || 'gemini-3.6-flash';
   if (!apiKey) return res.status(503).json({ error: 'A chave da Gemini não foi configurada nas variáveis de ambiente da Vercel.' });
 
   try {
@@ -40,7 +40,7 @@ module.exports = async function handler(req, res) {
           ],
           generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 500
+            maxOutputTokens: 800
           }
         })
       });
