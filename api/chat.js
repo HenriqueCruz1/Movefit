@@ -22,16 +22,45 @@ module.exports = async function handler(req, res) {
     const profile = body.profile && typeof body.profile === 'object'
       ? `\nContexto opcional do perfil informado pelo aluno: nível=${String(body.profile.level || 'não informado').slice(0, 40)}, objetivo=${String(body.profile.goal || 'não informado').slice(0, 80)}.`
       : '';
-    const apiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTIONS }] },
-        contents: [{ role: 'user', parts: [{ text: message + profile }] }],
-        generationConfig: { temperature: 0.7, maxOutputTokens: 500 }
-      })
-    });
+    
+    let apiResponse;
+
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+
+    for (let tentativa = 0; tentativa < 3; tentativa++) {
+      apiResponse = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: {
+            parts: [{ text: SYSTEM_INSTRUCTIONS }]
+          },
+          contents: [
+            { role: 'user', parts: [{ text: message + profile }] }
+          ],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 500
+          }
+        })
+      });
+
+      // Só tenta novamente em caso de erro temporário.
+      if (
+        apiResponse.status !== 503 ||
+        tentativa === 2
+      ) {
+        break;
+      }
+
+      // Aguarda 1 segundo; na segunda tentativa, 2 segundos.
+      await new Promise(resolve =>
+        setTimeout(resolve, 1000 * (tentativa + 1))
+      );
+    }
+
     const data = await apiResponse.json().catch(() => ({}));
+
     if (!apiResponse.ok) {
       console.error('Gemini API status:', apiResponse.status, data?.error?.message || 'sem detalhes');
       return res.status(apiResponse.status === 429 ? 429 : 502).json({
